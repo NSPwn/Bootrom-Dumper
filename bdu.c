@@ -15,14 +15,20 @@
 
 #define LOADADDR	0x84000000
 // A4:
+#if defined(DEVICE_A4)
 #define EXPLOIT_LR	0x8403BF9C
 #define LOADADDR_SIZE	0x2C000
 // iPod 3G:
-//#define EXPLOIT_LR	0x84033F98
-//#define LOADADDR_SIZE	0x24000
+#elif defined(DEVICE_3G)
+#define EXPLOIT_LR	0x84033F98
+#define LOADADDR_SIZE	0x24000
 // iPhone 3Gs:
-//#define EXPLOIT_LR	0x84033FA4
-//#define LOADADDR_SIZE	0x24000
+#elif defined(DEVICE_3GS_NEW_BOOTROM)
+#define EXPLOIT_LR	0x84033FA4
+#define LOADADDR_SIZE	0x24000
+#else
+#error No device type specified!
+#endif
 
 #define VENDOR_ID    0x05AC
 #define WTF_MODE     0x1227
@@ -114,7 +120,7 @@ int main(int argc, char *argv[]) {
 	
 	// 1. Initialisation of the USB connection with the device in DFU
 	libusb_init(&context);
-	libusb_set_debug(NULL, 3);
+	//libusb_set_debug(NULL, 3);
 	handle = usb_init(context, WTF_MODE);
 	if (handle == NULL) {
 		printf("[X] Please connect your iDevice in _DFU_ mode.\n");
